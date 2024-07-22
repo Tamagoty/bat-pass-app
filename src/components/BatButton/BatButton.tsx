@@ -1,35 +1,30 @@
-import React from "react";
-import { View, Button, Text, Pressable } from "react-native";
-
+import React, { useState } from "react";
+import { Text, Pressable } from "react-native";
 import { styles } from "./BatButtonStyles";
+import { BatTextInput } from "../BatTextInput/BatTextInput";
+import generatePass from "../../services/passwordService";
+import * as Clipboard from "expo-clipboard";
 
 export function BatButton() {
+  const [pass, setPass] = useState<string>("");
+
+  function handleGenerateButton() {
+    let generateToken = generatePass();
+    setPass(generateToken);
+  }
+
+  function handleCopyButton() {
+    Clipboard.setStringAsync(pass);
+  }
   return (
-    <View style={styles.container}>
-      <Button
-        onPress={() => {
-          console.log("Olá");
-        }}
-        title="Clique aqui"
-        accessibilityLabel="click em mim"
-        color={"#831584"}
-      />
-      <Pressable
-        style={styles.button}
-        onPress={() => {
-          console.log("Fui pressionado");
-        }}
-      >
+    <>
+      <BatTextInput pass={pass} />
+      <Pressable onPress={handleGenerateButton} style={styles.button}>
         <Text style={styles.text}>🔃GENERATE</Text>
       </Pressable>
-      <Pressable
-        style={styles.button}
-        onPress={() => {
-          console.log("Fui pressionado");
-        }}
-      >
+      <Pressable style={styles.button} onPress={handleCopyButton}>
         <Text style={styles.text}>⚡COPY</Text>
       </Pressable>
-    </View>
+    </>
   );
 }
